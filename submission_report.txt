@@ -1,0 +1,198 @@
+npm test                        
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:6923) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ FAIL  src/__tests__/login.test.js
+  ● Test suite failed to run
+
+    Your test suite must contain at least one test.
+
+      at onResult (node_modules/@jest/core/build/index.js:1057:18)
+      at node_modules/@jest/core/build/index.js:1127:165
+      at node_modules/emittery/index.js:363:13
+          at Array.map (<anonymous>)
+      at Emittery.emit (node_modules/emittery/index.js:361:23)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |       0 |        0 |       0 |       0 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.95 s
+Ran all test suites.
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ nano src/__tests__/login.test.js
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ cat src/login.js
+import { loginApi } from './__mocks__/api';
+
+export const handleLogin = async (email, password) => {
+  if (!email || !password) {
+    return "Fields cannot be empty";
+  }
+  try {
+    const response = await loginApi(email, password);
+    return response.message;
+  } catch (error) {
+    return error.message;
+  }
+};
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ nano src/__tests__/login.test.js
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ npm test                        
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:6987) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ FAIL  src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✕ Path 1: Success with seed data (13 ms)
+    ✕ Path 2: Failure with wrong password (2 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+  ● Login UI Critical Paths › Path 1: Success with seed data
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Success"
+    Received: "Real API"
+
+      15 |   test("Path 1: Success with seed data", async () => {
+      16 |     const result = await handleLogin("admin@kali.org", "P@ssword123");
+    > 17 |     expect(result).toBe("Success");
+         |                    ^
+      18 |   });
+      19 |
+      20 |   test("Path 2: Failure with wrong password", async () => {
+
+      at Object.toBe (src/__tests__/login.test.js:17:20)
+
+  ● Login UI Critical Paths › Path 2: Failure with wrong password
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Invalid Credentials"
+    Received: "Real API"
+
+      20 |   test("Path 2: Failure with wrong password", async () => {
+      21 |     const result = await handleLogin("admin@kali.org", "wrong");
+    > 22 |     expect(result).toBe("Invalid Credentials");
+         |                    ^
+      23 |   });
+      24 |
+      25 |   test("Path 3: Validation - Empty fields", async () => {
+
+      at Object.toBe (src/__tests__/login.test.js:22:20)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |   85.71 |      100 |     100 |   85.71 |                   
+ login.js |   85.71 |      100 |     100 |   85.71 | 11                
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        1.28 s
+Ran all test suites.
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ nano src/__tests__/login.test.js
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ npm test                        
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:7095) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✓ Path 1: Success with seed data (14 ms)
+    ✓ Path 2: Failure with wrong password (1 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ login.js |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.935 s, estimated 2 s
+Ran all test suites.
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ npm test > submission_report.txt
+(node:7129) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✓ Path 1: Success with seed data (4 ms)
+    ✓ Path 2: Failure with wrong password (1 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.858 s, estimated 1 s
+Ran all test suites.
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ cat submission_report.txt
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ login.js |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ zip -r submission.zip . -x "node_modules/*" ".npm/*"
+  adding: coverage/ (stored 0%)
+  adding: coverage/clover.xml (deflated 65%)
+  adding: coverage/lcov.info (deflated 38%)
+  adding: coverage/coverage-final.json (deflated 69%)
+  adding: coverage/lcov-report/ (stored 0%)
+  adding: coverage/lcov-report/favicon.png (stored 0%)
+  adding: coverage/lcov-report/login.js.html (deflated 71%)
+  adding: coverage/lcov-report/block-navigation.js (deflated 67%)
+  adding: coverage/lcov-report/sort-arrow-sprite.png (stored 0%)
+  adding: coverage/lcov-report/index.html (deflated 73%)
+  adding: coverage/lcov-report/prettify.js (deflated 60%)
+  adding: coverage/lcov-report/sorter.js (deflated 72%)
+  adding: coverage/lcov-report/prettify.css (deflated 55%)
+  adding: coverage/lcov-report/base.css (deflated 69%)
+  adding: .babelrc (deflated 11%)
+  adding: package-lock.json (deflated 79%)
+  adding: package.json (deflated 39%)
+  adding: src/ (stored 0%)
+  adding: src/__tests__/ (stored 0%)
+  adding: src/__tests__/login.test.js (deflated 54%)
+  adding: src/__mocks__/ (stored 0%)
+  adding: src/__mocks__/api.js (deflated 18%)
+  adding: src/login.js (deflated 39%)
+  adding: submission_report.txt (deflated 67%)
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ 
