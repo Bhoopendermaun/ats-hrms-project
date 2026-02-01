@@ -195,4 +195,81 @@ All files |     100 |      100 |     100 |     100 |
   adding: submission_report.txt (deflated 67%)
                                                                                                                    
 ┌──(kali㉿kali)-[~/auth-test-lab]
-└─$ 
+└─$┌──(kali㉿kali)-[~]
+└─$ cd                                               
+                                                                                                                   
+┌──(kali㉿kali)-[~]
+└─$ auth-test-lab                                                     
+                                                                                                                   
+┌──(kali㉿kali)-[~/auth-test-lab]
+└─$ for i in {1..3}; do npm test || exit 1; done
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:1689) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✓ Path 1: Success with seed data (3 ms)
+    ✓ Path 2: Failure with wrong password (1 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ login.js |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        1.531 s
+Ran all test suites.
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:1717) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✓ Path 1: Success with seed data (3 ms)
+    ✓ Path 2: Failure with wrong password (1 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ login.js |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.844 s, estimated 2 s
+Ran all test suites.
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage
+
+(node:1743) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  src/__tests__/login.test.js
+  Login UI Critical Paths
+    ✓ Path 1: Success with seed data (3 ms)
+    ✓ Path 2: Failure with wrong password (1 ms)
+    ✓ Path 3: Validation - Empty fields (1 ms)
+
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ login.js |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.828 s, estimated 1 s
+Ran all test suites.
+ 
