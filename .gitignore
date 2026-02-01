@@ -1,0 +1,5 @@
+node_modules/
+coverage/
+.stryker-tmp/
+node_modules/
+*.zip
