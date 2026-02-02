@@ -18,12 +18,13 @@ describe('ATS User Provisioning & Profile Mapping', () => {
     const user = provisionUser(claims, mockDb, config);
     expect(user.role).toBe('Candidate');
     expect(user.isNewUser).toBe(true);
+    expect(user.id).toMatch(/^user_\d+$/);
   });
 
   test('Existing User: should match by providerId and set isNewUser=false', () => {
     const claims = { email: 'recruiter@hrms-agency.com', name: 'Recruiter Updated', sub: 'sub-123', hd: 'hrms-agency.com', email_verified: true };
     const user = provisionUser(claims, mockDb, config);
-    expect(user.id).toBe('1');
+    expect(user.id).toBe("1");
     expect(user.isNewUser).toBe(false);
   });
 
