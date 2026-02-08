@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1769986041243" clover="3.2.0">
-  <project timestamp="1769986041243" name="All files">
+<coverage generated="1770591253049" clover="3.2.0">
+  <project timestamp="1770591253049" name="All files">
     <metrics statements="20" coveredstatements="20" conditionals="17" coveredconditionals="17" methods="3" coveredmethods="3" elements="40" coveredelements="40" complexity="0" loc="20" ncloc="20" packages="1" files="2" classes="2"/>
     <file name="login.js" path="/home/kali/ats-hrms-project/src/login.js">
       <metrics statements="7" coveredstatements="7" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
       <line num="3" count="1" type="stmt"/>
-      <line num="4" count="3" type="cond" truecount="4" falsecount="0"/>
-      <line num="5" count="1" type="stmt"/>
+      <line num="4" count="5" type="cond" truecount="4" falsecount="0"/>
+      <line num="5" count="3" type="stmt"/>
       <line num="7" count="2" type="stmt"/>
       <line num="8" count="2" type="stmt"/>
       <line num="9" count="1" type="stmt"/>

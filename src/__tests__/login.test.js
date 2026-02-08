@@ -25,6 +25,16 @@ describe("Login UI Critical Paths", () => {
   });
 
   test("Path 3: Validation - Empty fields", async () => {
+    const result = await handleLogin("", "somePassword");
+    expect(result).toBe("Fields cannot be empty");
+  
+  });  
+    test("Path 4: Validation - Empty password only", async () => {
+    const result = await handleLogin("admin@kali.org", "");
+    expect(result).toBe("Fields cannot be empty");
+  });
+
+  test("Path 5: Both fields empty", async () => {
     const result = await handleLogin("", "");
     expect(result).toBe("Fields cannot be empty");
   });
