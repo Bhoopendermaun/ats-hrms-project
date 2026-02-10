@@ -1,10 +1,1 @@
-{"name":"auth-test-lab",
-"version":"1.0.0",
-"type":"module",
-"scripts":{"test":"node --experimental-vm-modules node_modules/.bin/jest --coverage",
-"mutate": "stryker run --mutate src/login.js"},
-"devDependencies":{"@babel/preset-env":"^7.28.6",
-"@stryker-mutator/core":"^9.4.0",
-"@stryker-mutator/jest-runner":"^9.4.0",
-"@testing-library/jest-dom":"^6.9.1",
-"@testing-library/react":"^16.3.1","jest":"^30.2.0"}}
+{"name":"auth-test-lab","version":"1.0.0","type":"module","scripts":{"test":"node --experimental-vm-modules node_modules/.bin/jest --coverage","mutate":"stryker run --mutate src/login.js"},"devDependencies":{"@babel/preset-env":"^7.28.6","@stryker-mutator/core":"^9.4.0","@stryker-mutator/jest-runner":"^9.4.0","@testing-library/jest-dom":"^6.9.1","@testing-library/react":"^16.3.1","jest":"^30.2.0"},"dependencies":{"express":"^5.2.1"}}
