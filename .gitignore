@@ -1,10 +1,5 @@
 node_modules/
+.env
 coverage/
-.stryker-tmp/
-node_modules/
 *.zip
-node_modules/
-coverage/
-reports/
-*.text
 *.txt

@@ -1,19 +1,16 @@
 import express from 'express';
+import 'dotenv/config';
+import { authenticate } from './middleware/auth.js'; // Import real JWT logic
 import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 app.use(express.json());
 
-// Mock Middleware to simulate a logged-in user for testing
-// In production, this would be your JWT/OAuth verification logic
-app.use((req, res, next) => {
-    // For testing: change role to 'USER' to see the 403 in action
-    req.user = { id: '1', role: 'ADMIN' }; 
-    next();
-});
+// ❌ REMOVE the Mock Middleware (the one setting req.user = {role: 'ADMIN'})
+// ✅ Instead, apply the real JWT verification to your routes
 
-// Link the routes you just created
-app.use('/api/users', userRoutes);
+// Protected Routes
+app.use('/api/users', authenticate, userRoutes); 
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -1,0 +1,21 @@
+
+> auth-test-lab@1.0.0 test
+> node --experimental-vm-modules node_modules/.bin/jest --coverage --coverage
+
+(node:16221) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/provisioning.test.js
+PASS src/__tests__/login.test.js
+-----------------|---------|----------|---------|---------|-------------------
+File             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------|---------|----------|---------|---------|-------------------
+All files        |     100 |      100 |     100 |     100 |                   
+ login.js        |     100 |      100 |     100 |     100 |                   
+ provisioning.js |     100 |      100 |     100 |     100 |                   
+-----------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 2 passed, 2 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        0.874 s, estimated 1 s
+Ran all test suites.

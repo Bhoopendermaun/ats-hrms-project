@@ -1,4 +1,5 @@
-// config/permissions.js
+
+// src/config/permissions.js
 export const ROLES = {
   ADMIN: 'ADMIN',
   EDITOR: 'EDITOR',
@@ -6,7 +7,7 @@ export const ROLES = {
 };
 
 export const PERMISSION_MATRIX = {
-  [ROLES.ADMIN]: ['all'], // Wildcard for full access
+  [ROLES.ADMIN]: ['all:all'], // Updated to match the rbac.js check
   [ROLES.EDITOR]: ['read:content', 'write:content', 'update:content'],
   [ROLES.USER]: ['read:content'],
 };
