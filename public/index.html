@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ATS-HRMS Login</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; }
+        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .google { background: #db4437; color: white; }
+        .ms { background: #00a1f1; color: white; }
+        #error-box { color: #db4437; font-size: 0.9rem; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>ATS-HRMS Login</h1>
+        <p>Choose an OAuth Provider</p>
+        <div id="error-box"></div>
+        <button class="btn google" onclick="location.href='/auth/google'">Continue with Google</button>
+        <button class="btn ms" onclick="location.href='/auth/microsoft'">Continue with Microsoft</button>
+    </div>
+
+    <script>
+        // Check for error messages in the URL (e.g., ?error=Access%20Denied)
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+            const box = document.getElementById('error-box');
+            box.textContent = params.get('error');
+            box.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

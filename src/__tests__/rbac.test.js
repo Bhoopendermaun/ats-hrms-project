@@ -29,21 +29,27 @@ describe('RBAC Middleware Enforcement', () => {
     expect(mockRes.json).toHaveBeenCalledWith({ error: 'Access denied' });
   });
 
-test('AC #3: Should call next() for ADMIN role (full access)', async () => {
-  const mockReq = { 
-    user: { id: '1', role: 'ADMIN' } // Role must be uppercase to match matrix
-  };
-  const mockRes = { 
-    status: jest.fn().mockReturnThis(), 
-    json: jest.fn() 
-  };
-  const nextFunction = jest.fn();
+  test('AC #3: Should call next() for ADMIN role (full access)', async () => {
+    // Admin setup
+    mockReq.user = { id: '1', role: 'ADMIN' };
+    
+    const middleware = authorize('all:all'); 
+    middleware(mockReq, mockRes, nextFunction);
 
-  // Use a permission that ADMIN explicitly has, or 'all:all'
-  const middleware = authorize('all:all'); 
-  
-  middleware(mockReq, mockRes, nextFunction);
+    expect(nextFunction).toHaveBeenCalled();
+  });
 
-  expect(nextFunction).toHaveBeenCalled();
-});
+  // This is now correctly placed OUTSIDE the previous test
+  test('Edge Case: Should return 403 if user has an invalid/missing role', () => {
+    // Simulates a user provisioned with a typo or a role not in our matrix
+    mockReq.user = { id: '999', role: 'NON_EXISTENT_ROLE' }; 
+    
+    const middleware = authorize('admin:delete');
+    middleware(mockReq, mockRes, nextFunction);
+
+    // This triggers the "|| []" fallback on Line 14 of rbac.js
+    expect(mockRes.status).toHaveBeenCalledWith(403);
+    expect(mockRes.json).toHaveBeenCalledWith({ error: 'Access denied' });
+    expect(nextFunction).not.toHaveBeenCalled();
+  });
 });

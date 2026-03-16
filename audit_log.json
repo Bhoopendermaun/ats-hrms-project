@@ -1,0 +1,28 @@
+[
+  {
+    "id": "EVT-1773599240375",
+    "timestamp": "3/15/2026, 1:27:20 PM",
+    "event_type": "LOGIN_SUCCESS",
+    "user": "OAuth_User",
+    "role": "ADMIN",
+    "status": "AUTHORIZED"
+  },
+  {
+    "id": "EVT-1773601534267",
+    "timestamp": "3/15/2026, 2:05:34 PM",
+    "event_type": "LOGIN_SUCCESS",
+    "user": "OAuth_User",
+    "role": "ADMIN",
+    "status": "AUTHORIZED",
+    "ip_address": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "EVT-1773601555920",
+    "timestamp": "3/15/2026, 2:05:55 PM",
+    "event_type": "LOGIN_SUCCESS",
+    "user": "OAuth_User",
+    "role": "USER",
+    "status": "AUTHORIZED",
+    "ip_address": "::ffff:127.0.0.1"
+  }
+]

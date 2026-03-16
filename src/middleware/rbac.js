@@ -18,8 +18,7 @@ export const authorize = (requiredPermission) => {
     if (!hasPermission) {
       // 3. Secure Logging (AC #5)
       // Note: user.id comes from the JWT payload we implemented in login.js
-      console.warn(`[AUTH_FAILURE]: User ${user.id} denied access to ${requiredPermission}`);
-      
+      console.warn(`[AUTH_FAILURE]: User ${user?.id || 'Anonymous'} denied access to ${requiredPermission}`);
       // 4. Forbidden Response (AC #2 & #5)
       // Generic message ensures "No sensitive details leaked"
       return res.status(403).json({ error: "Access denied" });
