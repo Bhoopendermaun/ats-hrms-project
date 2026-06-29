@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.stryker-mutator.io/stryker-config.json",
+  "mutate": [
+    "src/controllers/adminController.js",
+    "src/controllers/oauth.controller.js",
+    "src/middleware/auth.js",
+    "src/middleware/rbac.js",
+    "src/services/oauth.service.js",
+    "src/services/provisioning.service.js",
+    "src/services/roleService.js"
+  ],
+  "testRunner": "jest",
+  "testRunnerNodeArgs": [
+    "--experimental-vm-modules"
+  ],
+  "jest": {
+    "projectType": "custom",
+    "configFile": "package.json",
+    "enableFindRelatedTests": true
+  },
+  "coverageAnalysis": "perTest",
+  "concurrency": 4,
+  "timeoutMS": 10000,
+  "timeoutFactor": 1.5,
+  "disableTypeChecks": true,
+  "reporters": [
+    "clear-text",
+    "progress",
+    "html",
+    "json"
+  ]
+}

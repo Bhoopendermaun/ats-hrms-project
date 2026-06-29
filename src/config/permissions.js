@@ -1,13 +1,27 @@
-
 // src/config/permissions.js
+
 export const ROLES = {
   ADMIN: 'ADMIN',
-  EDITOR: 'EDITOR',
+  MANAGER: 'MANAGER',
   USER: 'USER',
 };
 
 export const PERMISSION_MATRIX = {
-  [ROLES.ADMIN]: ['all:all'], // Updated to match the rbac.js check
-  [ROLES.EDITOR]: ['read:content', 'write:content', 'update:content'],
-  [ROLES.USER]: ['read:content'],
+  [ROLES.ADMIN]: [
+    'all:all',
+    'manage:users',
+    'view:logs',
+    'manage:roles',
+    'approve:roles'
+  ],
+
+  [ROLES.MANAGER]: [
+    'read:users',
+    'edit:users',
+    'view:reports'
+  ],
+
+  [ROLES.USER]: [
+    'read:self'
+  ],
 };

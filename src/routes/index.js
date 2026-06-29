@@ -1,18 +1,19 @@
 import express from 'express';
-import { authenticate } from './middleware/auth.js';
-import { authorize } from './middleware/rbac.js';
+// Fixed paths to look up one directory to find middleware
+import { authenticate } from '../middleware/auth.js';
+import { authorize } from '../middleware/rbac.js';
 
-const app = express();
-app.use(express.json());
+const router = express.Router();
 
-// 1. The "Protected" route (Tests 401)
-app.get('/api/protected', authenticate, (req, res) => {
+// 1. The "Protected" route
+// Now correctly exports the route logic to be tracked by the main app coverage
+router.get('/protected', authenticate, (req, res) => {
   res.status(200).json({ message: "You are authenticated!" });
 });
 
-// 2. The "Admin" route (Tests 403)
-app.get('/api/admin-only', authenticate, authorize('admin:all'), (req, res) => {
+// 2. The "Admin" route
+router.get('/admin-only', authenticate, authorize('admin:all'), (req, res) => {
   res.status(200).json({ message: "Welcome, Admin!" });
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+export default router;

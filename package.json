@@ -1,1 +1,62 @@
-{"name":"auth-test-lab","version":"1.0.0","type":"module","scripts":{"test":"node --experimental-vm-modules node_modules/.bin/jest --coverage","mutate":"stryker run --mutate src/login.js"},"devDependencies":{"@babel/preset-env":"^7.28.6","@stryker-mutator/core":"^9.4.0","@stryker-mutator/jest-runner":"^9.4.0","@testing-library/jest-dom":"^6.9.1","@testing-library/react":"^16.3.1","jest":"^30.2.0"},"dependencies":{"cookie-parser":"^1.4.7","dotenv":"^17.3.1","express":"^5.2.1","express-openid-connect":"^2.19.4","jsonwebtoken":"^9.0.3","winston":"^3.19.0"}}
+{
+  "name": "Project ATS-HRMS",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  },
+  "stryker": {
+    "mutate": [
+      "src/controllers/adminController.js",
+      "src/controllers/oauth.controller.js",
+      "src/middleware/auth.js",
+      "src/middleware/rbac.js",
+      "src/services/oauth.service.js",
+      "src/services/roleService.js"
+    ],
+    "testRunner": "jest",
+    "jest": {
+      "projectType": "custom",
+      "enableFindRelatedTests": true
+    },
+    "coverageAnalysis": "perTest",
+    "timeoutMS": 10000,
+    "timeoutFactor": 2,
+    "disableTypeChecks": true,
+    "reporters": [
+      "html",
+      "json",
+      "progress"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/.stryker-tmp"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "logger.js",
+      "!src/models/UserModel.js",
+      "!src/controllers/auth.controller.js"
+    ]
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "jest": "^29.0.0",
+    "mongoose": "^9.6.2",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@stryker-mutator/core": "^9.6.1",
+    "@stryker-mutator/jest-runner": "^9.6.1",
+    "babel-jest": "^30.4.1",
+    "jsonwebtoken": "^9.0.3",
+    "supertest": "^7.2.2"
+  }
+}

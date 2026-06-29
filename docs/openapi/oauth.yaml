@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: ATS-HRMS OAuth API
+  version: 1.0.0
+  description: OAuth 2.0 authentication endpoints for ATS-HRMS
+servers:
+  - url: http://localhost:5000
+    description: Development server
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            role:
+              type: string
+            email:
+              type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+paths:
+  /api/oauth/{provider}/login:
+    get:
+      summary: Initiate OAuth authentication pipeline
+      description: Generates secure state parameter, initializes CSRF cookie protection, and triggers upstream provider consent redirect.
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [google, github, azure]
+      responses:
+        302:
+          description: Redirection to authorization service consent screen.
+        400:
+          description: Unsupported OAuth provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/oauth/{provider}/callback:
+    get:
+      summary: Handle OAuth authentication response codes
+      description: Validates state for CSRF prevention, handles token exchange, resolves account linking, and returns application tokens.
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully authenticated. Returns application tokens.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccess'
+        400:
+          description: Authorization code missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: CSRF state mismatch or deactivated account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/oauth/logout:
+    post:
+      summary: Terminate sessions and revoke platform authentication tokens
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        200:
+          description: Complete revocation achieved. Access and refresh tokens invalidated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Missing tokens required for session revocation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error during session cleanup.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

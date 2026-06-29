@@ -1,5 +1,21 @@
 node_modules/
+audit_log.json
 .env
+*.log
+.DS_Store
+
+# Cache, temporary directories, and coverage metrics
+.stryker-tmp/
 coverage/
-*.zip
+
+# Local text reports, artifacts, and build archives
 *.txt
+*.zip
+Project
+node
+191
+208
+kyou.txt
+
+# Editor backup states
+*.save

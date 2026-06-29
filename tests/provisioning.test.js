@@ -1,4 +1,4 @@
-import { provisionUser } from '../src/provisioning.js';
+import { provisionUser } from '../src/services/provisioning.service.js';
 
 describe('ATS User Provisioning & Profile Mapping', () => {
   let mockDb;

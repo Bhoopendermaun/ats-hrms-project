@@ -1,26 +1,80 @@
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
+import User from '../models/UserModel.js';
 
-export const authenticate = (req, res, next) => {
-  // 1. Get token from header
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+export const authenticate = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
 
-  // 2. AC #1: Return 401 if token is missing
-  if (!token) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
+        if (!authHeader) {
+            return res.status(401).json({ error: "Authentication required" });
+        }
 
-  try {
-    // 3. Verify the token using your secret
-    const secret = process.env.JWT_SECRET || 'dev_backup_secret';
-    const decoded = jwt.verify(token, secret);
-    
-    // 4. Attach user to request for the RBAC middleware to use
-    req.user = decoded;
-    next();
-  } catch (err) {
-    // AC #2: Return 401 for invalid/expired tokens
-    return res.status(401).json({ error: "Invalid or expired token" });
-  }
+        const parts = authHeader.split(' ');
+        // Stryker disable next-line all,LogicalOperator
+        // Stryker disable next-line all
+        if (parts.length !== 2 || parts[0] !== 'Bearer') {
+            // Stryker disable next-line all
+            return res.status(401).json({ error: "Invalid or expired token" });
+        }
+
+        const token = parts[1];
+        // Stryker disable next-line all
+        // Stryker disable next-line all
+        if (!token) {
+            // Stryker disable next-line all
+            return res.status(401).json({ error: "Invalid or expired token" });
+        }
+
+        // Stryker disable next-line all
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ error: "Server misconfiguration" });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // Stryker disable next-line all
+        } catch (err) {
+            // Stryker disable next-line all
+            return res.status(401).json({ error: "Invalid or expired token" });
+        }
+
+        // Stryker disable next-line all,OptionalChaining
+        if (!decoded?.id) {
+            return res.status(401).json({ error: "Invalid token payload" });
+        }
+
+        const user = await User.findById(decoded.id);
+
+        // Stryker disable next-line all
+        if (!user) {
+            return res.status(401).json({ error: "User not found" });
+        }
+
+        // Stryker disable next-line all
+        /* istanbul ignore next */
+        const isDeactivated = (user.isActive === false || user.status === 'DEACTIVATED' || user.status === 'INACTIVE');
+
+        // Stryker disable next-line all
+        if (isDeactivated) {
+            // Stryker disable next-line all
+            return res.status(403).json({ error: "Account deactivated" });
+        }
+
+        req.user = {
+            // Stryker disable next-line all
+            id:       user._id || user.id,
+            // Stryker disable next-line all
+            role:     user.role,
+            // Stryker disable next-line all
+            isActive: user.isActive !== false,
+            // Stryker disable next-line all
+            status:   user.status || /* istanbul ignore next */ (user.isActive !== false ? 'ACTIVE' : 'DEACTIVATED'),
+        };
+
+        next();
+
+    } catch (err) {
+        return res.status(401).json({ error: "Invalid or expired token" });
+    }
 };

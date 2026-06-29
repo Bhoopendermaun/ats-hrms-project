@@ -1,0 +1,175 @@
+import { jest } from '@jest/globals';
+import request from 'supertest';
+import jwt from 'jsonwebtoken';
+
+// ---------------------------------------------------------------------
+// Environment Setup
+// ---------------------------------------------------------------------
+process.env.JWT_SECRET = 'your-test-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// ---------------------------------------------------------------------
+// Mock Dependencies (MUST be declared before imports)
+// ---------------------------------------------------------------------
+jest.unstable_mockModule('../src/models/UserModel.js', () => ({
+    default: { findById: jest.fn() },
+}));
+
+jest.unstable_mockModule('../src/services/auditService.js', () => ({
+    logAuditTrail: jest.fn().mockResolvedValue(true),
+}));
+
+jest.unstable_mockModule('../src/services/roleService.js', () => ({
+    roleService: {
+        getPermissionsByRole: jest.fn().mockResolvedValue(['view:self']),
+        checkPermission: jest.fn().mockReturnValue(true),
+        validateRole: jest.fn().mockReturnValue(true),
+    },
+    default: {
+        getPermissionsByRole: jest.fn().mockResolvedValue(['view:self']),
+        checkPermission: jest.fn().mockReturnValue(true),
+        validateRole: jest.fn().mockReturnValue(true),
+    },
+}));
+
+// ---------------------------------------------------------------------
+// Import App AFTER mocks are registered
+// ---------------------------------------------------------------------
+const { default: app }  = await import('../src/app.js');
+const { default: User } = await import('../src/models/UserModel.js');
+const { roleService }   = await import('../src/services/roleService.js');
+
+// ---------------------------------------------------------------------
+// Tokens
+// ---------------------------------------------------------------------
+const validUserToken  = jwt.sign({ id: 'user-1',  role: 'USER'  }, JWT_SECRET);
+const validAdminToken = jwt.sign({ id: 'admin-1', role: 'ADMIN' }, JWT_SECRET);
+
+// ---------------------------------------------------------------------
+// Test Suite
+// ---------------------------------------------------------------------
+describe('User Routes', () => {
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // -----------------------------------------------------------------
+    // GET /api/users/profile
+    // -----------------------------------------------------------------
+    describe('GET /api/users/profile', () => {
+
+        it('should return 200 with profile data for authenticated user', async () => {
+            User.findById.mockResolvedValue({ _id: 'user-1', role: 'USER', isActive: true });
+
+            const res = await request(app)
+                .get('/api/users/profile')
+                .set('Authorization', `Bearer ${validUserToken}`);
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toBe('Profile data');
+        });
+
+        it('should return 401 when no token is provided', async () => {
+            const res = await request(app).get('/api/users/profile');
+            expect(res.status).toBe(401);
+        });
+
+        it('should return 401 for invalid token', async () => {
+            const res = await request(app)
+                .get('/api/users/profile')
+                .set('Authorization', 'Bearer invalid-token');
+            expect(res.status).toBe(401);
+        });
+    });
+
+    // -----------------------------------------------------------------
+    // GET /api/users/permissions
+    // -----------------------------------------------------------------
+    describe('GET /api/users/permissions', () => {
+
+        it('should return role and permissions for authenticated user', async () => {
+            User.findById.mockResolvedValue({ _id: 'user-1', role: 'USER', isActive: true });
+            roleService.getPermissionsByRole.mockResolvedValue(['view:self']);
+
+            const res = await request(app)
+                .get('/api/users/permissions')
+                .set('Authorization', `Bearer ${validUserToken}`);
+
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty('role', 'USER');
+            expect(res.body).toHaveProperty('permissions');
+            expect(Array.isArray(res.body.permissions)).toBe(true);
+        });
+
+        it('should return correct permissions for ADMIN role', async () => {
+            User.findById.mockResolvedValue({ _id: 'admin-1', role: 'ADMIN', isActive: true });
+            roleService.getPermissionsByRole.mockResolvedValue(['admin:write', 'all:all']);
+
+            const res = await request(app)
+                .get('/api/users/permissions')
+                .set('Authorization', `Bearer ${validAdminToken}`);
+
+            expect(res.status).toBe(200);
+            expect(res.body.role).toBe('ADMIN');
+            expect(res.body.permissions).toContain('all:all');
+        });
+
+        it('should return 401 when no token is provided', async () => {
+            const res = await request(app).get('/api/users/permissions');
+            expect(res.status).toBe(401);
+        });
+
+        it('should return 401 for invalid token', async () => {
+            const res = await request(app)
+                .get('/api/users/permissions')
+                .set('Authorization', 'Bearer bad-token');
+            expect(res.status).toBe(401);
+        });
+
+        it('should return 500 when roleService throws', async () => {
+            User.findById.mockResolvedValue({ _id: 'user-1', role: 'USER', isActive: true });
+            roleService.getPermissionsByRole.mockRejectedValueOnce(new Error('DB error'));
+
+            const res = await request(app)
+                .get('/api/users/permissions')
+                .set('Authorization', `Bearer ${validUserToken}`);
+
+            expect(res.status).toBe(500);
+            expect(res.body).toEqual({ error: 'Failed to retrieve permissions' });
+        });
+    });
+
+    // -----------------------------------------------------------------
+    // DELETE /api/users/manage-users/:id
+    // -----------------------------------------------------------------
+    describe('DELETE /api/users/manage-users/:id', () => {
+
+        it('should return 200 for ADMIN deleting a user', async () => {
+            User.findById.mockResolvedValue({ _id: 'admin-1', role: 'ADMIN', isActive: true });
+
+            const res = await request(app)
+                .delete('/api/users/manage-users/target-99')
+                .set('Authorization', `Bearer ${validAdminToken}`);
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toMatch(/target-99/);
+        });
+
+        it('should return 403 for USER attempting delete', async () => {
+            User.findById.mockResolvedValue({ _id: 'user-1', role: 'USER', isActive: true });
+
+            const res = await request(app)
+                .delete('/api/users/manage-users/target-99')
+                .set('Authorization', `Bearer ${validUserToken}`);
+
+            expect(res.status).toBe(403);
+        });
+
+        it('should return 401 when no token is provided', async () => {
+            const res = await request(app)
+                .delete('/api/users/manage-users/target-99');
+            expect(res.status).toBe(401);
+        });
+    });
+});
